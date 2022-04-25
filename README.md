@@ -10,7 +10,11 @@ You have to transfer ["obnlib.py"](lib/obnlib.py) and ["obnfont.bin"](lib/obnfon
   * Tiles with the same number merge into one when they touch. Add them up to reach 2048 and more.
   * D-pad: slide panels / A: undo / B: back to title\
     ![title](docs/img/Micro2048_shot1.png) ![playing](docs/img/Micro2048_shot2.png)
+* OBN-H02 [Hollow Seeker](Games/HollowSeeker/HollowSeeker.py)
+  * Go forward in right direction. Seek a hollow as refuge not to be crushed.
+  * D-pad left: move left / D-pad right or A: move right / B: pause\
+    ![title](docs/img/HollowSeeker_shot1.png) ![playing](docs/img/HollowSeeker_shot2.png)
 
 ## License
 
-These codes are licensed under [MIT-License](LICENSE).
+These codes are licensed under [MIT License](LICENSE).
