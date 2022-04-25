@@ -1,11 +1,14 @@
 import thumby
 import re
 
-__VERSION__ = "0.01"
+__VERSION__ = 0.02
 
-TEXT_LEFT = 0
-TEXT_CENTER = 1
-TEXT_RIGHT = 2
+SCRN_W = thumby.display.width
+SCRN_H = thumby.display.height
+
+TEXT_L = 0
+TEXT_C = 1
+TEXT_R = 2
 
 BTN_U = 0b000001
 BTN_D = 0b000010
@@ -66,7 +69,7 @@ class Menu:
 
     def draw(self):
         box(-1, 24, 130, 17, self.border, 0)
-        text(self.items[self.pos].label, 36, 30 + self.gap, TEXT_CENTER)
+        text(self.items[self.pos].label, 36, 30 + self.gap, TEXT_C)
         if frames % 16 < 8:
             for i in range(3):
                 blit(self.IMAGE_MARK, 33, 26)
@@ -158,6 +161,15 @@ last_buttons = 0
 sound_on = thumby.audio.enabled
 mml_player = None
 
+def check(version):
+    if __VERSION__ < version:
+        thumby.display.drawText("Update", 0, 0, 1)
+        thumby.display.drawText("\"obnlib.py\"", 6, 8, 1)
+        while not thumby.inputJustPressed():
+            thumby.display.update()
+        return False
+    return True
+
 def start(fps, app_code, app_version, func_table):
     global frames, cur_buttons, last_buttons, mml_player
     thumby.display.setFPS(fps)
@@ -166,7 +178,7 @@ def start(fps, app_code, app_version, func_table):
     cls()
     blit(IMAGE_LOGO, 18, 12)
     text(app_code, 6, 32)
-    text(app_version, 66, 32, TEXT_RIGHT)
+    text(app_version, 66, 32, TEXT_R)
 
     logo_cnt = fps
     state = 0
@@ -214,8 +226,16 @@ def blit(image, x, y, index=0, key=-1, mirrorX=False, mirrorY=False):
     thumby.display.blit(image.data[index], x - image.cx, y - image.cy, image.w,
                         image.h, key, mirrorX, mirrorY)
 
-def text(str, x, y, align=TEXT_LEFT, color=1):
-    thumby.display.drawText(str, x - align*len(str)*3, y, color)
+def text(str, x, y, align=TEXT_L, color=1, bg=False):
+    n = len(str)
+    x -= n * align * 3
+    if bg:
+        c = color ^ 1
+        box(x - 1, y - 1, n*6 + 1, 7, c, c)
+    thumby.display.drawText(str, x, y, color)
+
+def buf():
+    return thumby.display.display.buffer
 
 def btn(bits):
     global cur_buttons
@@ -232,7 +252,7 @@ def btn_u(bits):
 def sound(on):
     global sound_on
     sound_on = on
-    thumby.audio.set_enabled(on)
+    thumby.audio.setEnabled(on)
 
 def tick():
     tone(440, 10)
@@ -249,12 +269,12 @@ def play(mml, priority=0):
 
 def credit(name, year):
     if len(name) > 12:
-        words = name.split(maxsplit=2)
-        text(words[0], 6, 6, TEXT_LEFT)
-        text(words[1], 66, 12, TEXT_RIGHT)
+        words = name.split(" ", 2)
+        text(words[0], 6, 6, TEXT_L)
+        text(words[1], 66, 12, TEXT_R)
         y = 22
     else:
-        text(name, 36, 9, TEXT_CENTER)
+        text(name, 36, 9, TEXT_C)
         y = 19
-    text(year + "(C)OBONO", 36, y, TEXT_CENTER)
-    text("MIT LICENSE", 36, y + 6, TEXT_CENTER)
+    text(year + "(C)OBONO", 36, y, TEXT_C)
+    text("MIT LICENSE", 36, y + 6, TEXT_C)
