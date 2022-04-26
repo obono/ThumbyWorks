@@ -218,7 +218,7 @@ class Cave:
             diff = Player.HEIGHT - diff
             self.hollow_cnt = random.randint(2 + self.score//128,
                                              2 + self.score//64)
-        adjust = (c.bottom - (self.HEIGHT+Player.HEIGHT)/2) // 4
+        adjust = (c.bottom - (self.HEIGHT+Player.HEIGHT)/2 + 1.5) // 3
         r = Player.HEIGHT*2 + 1 - abs(diff - last_diff) - abs(adjust)
         bottom = c.bottom + random.randrange(int(r)) - Player.HEIGHT
         if diff > last_diff:
